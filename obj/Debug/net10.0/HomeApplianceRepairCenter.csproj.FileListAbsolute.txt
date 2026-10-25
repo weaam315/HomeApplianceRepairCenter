@@ -1,0 +1,14 @@
+C:\Users\sos\Desktop\HomeApplianceRepairCenter\bin\Debug\net10.0\HomeApplianceRepairCenter.exe
+C:\Users\sos\Desktop\HomeApplianceRepairCenter\bin\Debug\net10.0\HomeApplianceRepairCenter.deps.json
+C:\Users\sos\Desktop\HomeApplianceRepairCenter\bin\Debug\net10.0\HomeApplianceRepairCenter.runtimeconfig.json
+C:\Users\sos\Desktop\HomeApplianceRepairCenter\bin\Debug\net10.0\HomeApplianceRepairCenter.dll
+C:\Users\sos\Desktop\HomeApplianceRepairCenter\bin\Debug\net10.0\HomeApplianceRepairCenter.pdb
+C:\Users\sos\Desktop\HomeApplianceRepairCenter\obj\Debug\net10.0\HomeApplianceRepairCenter.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sos\Desktop\HomeApplianceRepairCenter\obj\Debug\net10.0\HomeApplianceRepairCenter.AssemblyInfoInputs.cache
+C:\Users\sos\Desktop\HomeApplianceRepairCenter\obj\Debug\net10.0\HomeApplianceRepairCenter.AssemblyInfo.cs
+C:\Users\sos\Desktop\HomeApplianceRepairCenter\obj\Debug\net10.0\HomeApplianceRepairCenter.csproj.CoreCompileInputs.cache
+C:\Users\sos\Desktop\HomeApplianceRepairCenter\obj\Debug\net10.0\HomeApplianceRepairCenter.dll
+C:\Users\sos\Desktop\HomeApplianceRepairCenter\obj\Debug\net10.0\refint\HomeApplianceRepairCenter.dll
+C:\Users\sos\Desktop\HomeApplianceRepairCenter\obj\Debug\net10.0\HomeApplianceRepairCenter.pdb
+C:\Users\sos\Desktop\HomeApplianceRepairCenter\obj\Debug\net10.0\HomeApplianceRepairCenter.genruntimeconfig.cache
+C:\Users\sos\Desktop\HomeApplianceRepairCenter\obj\Debug\net10.0\ref\HomeApplianceRepairCenter.dll
