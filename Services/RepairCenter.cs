@@ -13,13 +13,13 @@ namespace HomeApplianceRepairCenter.Services
             _appliances = new List<Appliance>();
         }
 
-        // خاصية ثابتة لحساب عدد الأجهزة حسب الحالة
+        // دالة ثابتة لحساب عدد الأجهزة حسب الحالة
         public static int GetCountByStatus(IEnumerable<Appliance> appliances, string status)
         {
             return appliances.Count(a => a.Status == status);
         }
 
-        // خاصية ثابتة أخرى لحساب متوسط تكلفة الإصلاح
+        // دالة ثابتة أخرى لحساب متوسط تكلفة الإصلاح
         public static decimal GetAverageRepairCost(IEnumerable<Appliance> appliances)
         {
             var list = appliances.ToList();
@@ -35,16 +35,37 @@ namespace HomeApplianceRepairCenter.Services
                 throw new ArgumentException("تاريخ الاستلام غير صالح");
 
             _appliances.Add(appliance);
-            // الاشتراك في الحدث
-            appliance.StatusChanged += OnApplianceStatusChanged;
+
+            // الاشتراك في الأحداث
+            appliance.StatusChanged += OnApplianceStatusChanged;      // الحدث العام
+            appliance.RepairCompleted += OnRepairCompleted;           // ★ حدث اكتمال الإصلاح
+            appliance.DeliveryDelayed += OnDeliveryDelayed;           // ★ حدث تأخر التسليم
         }
 
-        // معالج الحدث — يظهر دور التفويض والأحداث
+        // معالج الحدث العام — يظهر دور التفويض والأحداث
         private void OnApplianceStatusChanged(Appliance sender, string oldStatus, string newStatus)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"[إشعار] الجهاز «{sender.DeviceName}» ({sender.SerialNumber}) " +
                               $"تغيّرت حالته من «{oldStatus}» إلى «{newStatus}»");
+            Console.ResetColor();
+        }
+
+        // ★ معالج حدث اكتمال الإصلاح
+        private void OnRepairCompleted(Appliance sender)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"[إشعار] ✅ تم إصلاح الجهاز «{sender.DeviceName}» ({sender.SerialNumber}) بنجاح. " +
+                              $"التكلفة النهائية: {sender.CalculateRepairCost():N2} ريال");
+            Console.ResetColor();
+        }
+
+        // ★ معالج حدث تأخر التسليم
+        private void OnDeliveryDelayed(Appliance sender)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"[تنبيه] ⚠️ الجهاز «{sender.DeviceName}» ({sender.SerialNumber}) " +
+                              $"تجاوز مدة الإصلاح المتوقعة (7 أيام)!");
             Console.ResetColor();
         }
 
