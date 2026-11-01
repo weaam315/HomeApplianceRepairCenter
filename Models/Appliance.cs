@@ -2,12 +2,15 @@ using HomeApplianceRepairCenter.Interfaces;
 
 namespace HomeApplianceRepairCenter.Models
 {
-    // تعريف التفويض (Delegate) للإشعار بتغير حالة الجهاز
+    // التفويض الأساسي لتغير الحالة (كما هو)
     public delegate void StatusChangedEventHandler(Appliance sender, string oldStatus, string newStatus);
 
-    /// <summary>
-    /// فئة مجردة تطبق الواجهة وتحتوي على الخصائص المشتركة
-    /// </summary>
+    // تفويض لاكتمال الإصلاح
+    public delegate void RepairCompletedEventHandler(Appliance sender);
+
+    // تفويض لتأخر التسليم
+    public delegate void DeliveryDelayedEventHandler(Appliance sender);
+
     public abstract class Appliance : IRepairable
     {
         // جميع الحقول خاصة (Encapsulation)
@@ -17,8 +20,16 @@ namespace HomeApplianceRepairCenter.Models
         private readonly string _serialNumber;
         private readonly DateTime _receivedDate;
 
-        // الحدث (Event) المرتبط بالتفويض
+        // ★ عدّاد ثابت لكل الأجهزة المنشأة (Static Field)
+        private static int _totalCreatedAppliances = 0;
+
+        // ★ خاصية ثابتة للقراءة فقط (Static Property)
+        public static int TotalCreatedAppliances => _totalCreatedAppliances;
+
+        // الأحداث
         public event StatusChangedEventHandler? StatusChanged;
+        public event RepairCompletedEventHandler? RepairCompleted;
+        public event DeliveryDelayedEventHandler? DeliveryDelayed;
 
         protected Appliance(int deviceId, string deviceName, string serialNumber, DateTime receivedDate)
         {
@@ -27,34 +38,60 @@ namespace HomeApplianceRepairCenter.Models
             _serialNumber = serialNumber;
             _receivedDate = receivedDate;
             _status = "قيد الانتظار";
+
+            // ★ زيادة العدّاد الثابت مع كل إنشاء جهاز
+            _totalCreatedAppliances++;
         }
 
         // خصائص للقراءة فقط (Read-only Properties)
         public int DeviceId => _deviceId;
         public string DeviceName => _deviceName;
-        public string SerialNumber => _serialNumber;   // لا يمكن تعديله بعد الإنشاء
+        public string SerialNumber => _serialNumber;
         public DateTime ReceivedDate => _receivedDate;
 
-        // خاصية مع تحقق من القيمة
         public string Status
         {
             get => _status;
             set
             {
                 if (_status == value) return;
+
                 string oldStatus = _status;
                 _status = value;
+
+                // الحدث العام (كما هو)
                 OnStatusChanged(oldStatus, value);
+
+                // ★ شرط محدد: اكتمال الإصلاح
+                if (value == "تم الإصلاح" || value == "مكتمل" || value == "Completed")
+                {
+                    OnRepairCompleted();
+                }
+
+                // ★ شرط محدد: تأخر التسليم (مرت أكثر من 7 أيام والجهاز لم يكتمل)
+                if (value != "تم الإصلاح" && value != "مكتمل" && value != "Completed"
+                    && (DateTime.Now - _receivedDate).TotalDays > 7)
+                {
+                    OnDeliveryDelayed();
+                }
             }
         }
 
-        // إطلاق الحدث
         protected virtual void OnStatusChanged(string oldStatus, string newStatus)
         {
             StatusChanged?.Invoke(this, oldStatus, newStatus);
         }
 
-        // دالة مجردة (Abstract Method) إلزامية
+        protected virtual void OnRepairCompleted()
+        {
+            RepairCompleted?.Invoke(this);
+        }
+
+        protected virtual void OnDeliveryDelayed()
+        {
+            DeliveryDelayed?.Invoke(this);
+        }
+
         public abstract decimal CalculateRepairCost();
 
         public virtual string GetDetails()
